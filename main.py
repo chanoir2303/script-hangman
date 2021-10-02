@@ -1,32 +1,44 @@
 import random
 
-print("""
-H A N G M A N
-""")
+print('H A N G M A N')
+start = input('Type "play" to play the game, "exit" to quit: ')
+if start == 'play':
+    puzzle_options = ['python', 'java', 'kotlin', 'javascript']
+    puzzle_selection = random.choice(puzzle_options)
+    tries = 8
+    guesses = set()
 
-word = ['python', 'java', 'kotlin', 'javascript']
-pick_choice = random.choice(word)
-tries = 0
+    while True:
+        print()
+        for letter in puzzle_selection:
+            if letter in guesses:
+                print(letter, end='')
+            else:
+                print('-', end='')
+        print()
 
-# replace chars by '-'
-if pick_choice == 'java':
-    hidden_word = pick_choice.replace(pick_choice[:], '-' * len(pick_choice[:]))
+        if set(puzzle_selection).issubset(guesses):
+            print("You guessed the word!\nYou survived!")
+            break
+
+        guess = input("Input a letter: ")
+        if len(guess) != 1:
+            print("You should input a single letter")
+            continue
+        elif guess not in set('qwertyuiopasdfghjklzxcvbnm'):
+            print("Please enter a lowercase English letter")
+            continue
+        elif guess in guesses:
+            print("You've already guessed this letter")
+            continue
+        elif guess not in puzzle_selection:
+            print("That letter doesn't appear in the word")
+            tries -= 1
+            if tries == 0:
+                print("You lost!")
+                break
+        guesses.add(guess)
+elif start == 'exit':
+    pass
 else:
-    hidden_word = pick_choice.replace(pick_choice[:], '-' * len(pick_choice[:]))
-
-while tries <= 8:
-    x = input(f'{hidden_word}\nInput a letter: ')
-    if x in set(pick_choice):
-        # replace char at give position
-        hidden_word = hidden_word[:pick_choice.index(x)] + pick_choice[pick_choice.index(x)] + hidden_word[pick_choice.index(x) + 1:]
-        tries += 1
-    if hidden_word == pick_choice:
-        print(hidden_word)
-        break
-    elif x not in set(pick_choice):
-        print("That letter doesn't appear in the word")
-        tries += 1
-print("""
-Thanks for playing!
-We'll see how well you did in the next stage
-    """)
+    print('Type "play" to play the game, "exit" to quit: ')
